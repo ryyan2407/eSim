@@ -111,7 +111,7 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 - Encountered errors where Python headers and library are not found in CMake
 Python Code:
 	> ` python3 -c "from sysconfig import get_paths; print(get_paths()['include'])" `
- > 
+    > 
 	> ` ldconfig -p | grep libpython3 `
 - Run CMake with explicit Python paths
 
