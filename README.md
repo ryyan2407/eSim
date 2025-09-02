@@ -1,23 +1,4 @@
-eSim Packaging
-====
-
-It contains all the documentation for packaging eSim for distribution.
-
-
-# Packaging eSim for Distribution:
-
-1. eSim is currently packaged and distributed for Ubuntu OS (Linux) and MS Windows OS.
-
-2. Refer the [documentation](Version_Change.md) for the changes to be done when a new release is to be made.
-
-> Note: These changes have to be made `first` before proceeding with the packaging on either platform.
-
-3. Refer the [documentation](Ubuntu/README.md) to package eSim for Ubuntu OS.
-
-4. Refer the [documentation](Windows/README.md) to package eSim for Windows OS.
-
-
-# Bug Report
+# eSim Installation on Ubuntu 25.04 Bug Report
 
 ## Bug #1: Installer does not support Ubuntu 25.04
 
@@ -32,7 +13,7 @@ It contains all the documentation for packaging eSim for distribution.
 ### Workaround:
 - Copied the contents of ‘install_eSim-24.04.sh’ into a new file: ‘install_eSim-25.04.sh’ for any further changes
 - Edited install_eSim.sh script to add the following to the case block:
-	“25.04”) SCRIPT=“$SCRIPT_DIR/install_eSim-25.04” ;;
+	> “25.04”) SCRIPT=“$SCRIPT_DIR/install_eSim-25.04” ;;
 
 Now, the installer can proceed, allowing further debugging based on dependencies
 
@@ -54,7 +35,7 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 
 #### (1) Building KiCad from Source on Ubuntu 25.04
 - Initial Dependencies Installation:
-	- sudo apt install -y libwxgtk3.2-dev libwxgtk-media3.2-dev libwxgtk-webview3.2-dev \
+	> sudo apt install -y libwxgtk3.2-dev libwxgtk-media3.2-dev libwxgtk-webview3.2-dev \
   	  git cmake g++ pkg-config libboost-all-dev libssl-dev libcairo2-dev libglib2.0-dev \
 	  libfreetype-dev libcurl4-openssl-dev python3-dev python3-pip doxygen graphviz
 	
@@ -71,7 +52,7 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 - KiCad requires libngspice shared library, missing from typical package installs
 - However, KiCad 6.0 source branch lacks the ‘get_libngspice_so.sh’
 - Manually cloned and built ngspice with shared library support:
-	git clone https://git.code.sf.net/p/ngspice/ngspice
+>   git clone https://git.code.sf.net/p/ngspice/ngspice
 	cd ngspice
 	./autogen.sh
 	./configure --with-ngshared
@@ -81,7 +62,7 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 #### (3.1) Building and Installing OpenCascade Technology (OCCT)
 - OpenCascade packages were unavailable in Ubuntu 25.04 repositories
 - Cloned the official OCCT repository and built from source:
-	git clone https://git.dev.opencascade.org/gitweb?p=occt.git
+>	git clone https://git.dev.opencascade.org/gitweb?p=occt.git
 	cd occt
 	mkdir build && cd build
 	cmake ..
@@ -89,12 +70,12 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 	sudo make install
 	sudo ldconfig
 - Installed Tcl/Tk development headers to satisft OCCT build requirements:
-	sudo apt install tcl-dev tk-dev
+> 	sudo apt install tcl-dev tk-dev
 
 #### (3.2) Fixing OpenCascade Library Naming Compatibility for KiCad
 - Modern OCCT (8.0) renamed libraries, breaking KiCad’s legacy library name expectations
 - Symlinked OCCT libraries to legacy names expected by KiCad, for example:
-	cd /usr/local/lib
+>	cd /usr/local/lib
 	sudo ln -s libTKDEIGES.so libTKIGES.so
 	sudo ln -s libTKDESTEP.so libTKSTEP209.so
 	sudo ln -s libTKDESTEP.so libTKSTEPAttr.so
@@ -114,7 +95,7 @@ Python Code:
 
 #### (5) Building and Installation KiCad
 - Compiled KiCad:
-	make -j$(nproc)
+>	make -j$(nproc)
 	sudo make install
 	sudo ldconfig
 - Verified installation by running KiCad in the terminal
@@ -156,7 +137,7 @@ Now the installer can proceed, allowing further debugging based on dependencies
 ### Workaround:
 - Edited the ‘install-nghdl-25.-04.sh’ file that was created and removed ‘libcanberra-gtk-module’ from the following line:
 	
-   	echo "Installing Gtk Canberra modules..........................."
+  > 	echo "Installing Gtk Canberra modules..........................."
     	sudo apt install -y libcanterra-gtk-module libcanberra-gtk3-module
 
 ## Bug #5: GHDL Build Fails with “Unhandled version llvm 20.1.2”
@@ -177,7 +158,7 @@ Now the installer can proceed, allowing further debugging based on dependencies
 ## Bug #6: GHDL Build Fails Due to Missing clang++ After Installing LLVM 14
 ### Description: 
 - After installing LLVM-14 (llvm-14, llvm-14-dev, llvm-14-tools, clang-14) on Ubuntu 25.04, the GHDL 4.1.0 build initially proceeds, but then fails with the error
-	/bin/sh: 1: clang++: not found
+	> /bin/sh: 1: clang++: not found
 - The build process requires the clang++ C++ compiler binary to be available in the system path, but it cannot find it
 
 ### Cause:
@@ -186,9 +167,9 @@ Now the installer can proceed, allowing further debugging based on dependencies
 
 ### Workaround:
 - Ensure that Clang 14 is installed:
-	sudo apt-get install clang-14
+	> sudo apt-get install clang-14
 - Create a symlink so the system recognizes clang++:
-	sudo ln -sf /usr/bin/clang++-14 /usr/bin/clang++
+	> sudo ln -sf /usr/bin/clang++-14 /usr/bin/clang++
 - Verify installation:
-	clang++ --version
+	> clang++ --version
 - Restart the installation and confirm the GHDL build finds and uses the correct C++ compiler
