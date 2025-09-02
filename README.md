@@ -37,7 +37,9 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 #### (1) Building KiCad from Source on Ubuntu 25.04
 - Initial Dependencies Installation:
 	> ` sudo apt install -y libwxgtk3.2-dev libwxgtk-media3.2-dev libwxgtk-webview3.2-dev `
+    > 
  	> ` git cmake g++ pkg-config libboost-all-dev libssl-dev libcairo2-dev libglib2.0-dev `
+    > 
 	> ` libfreetype-dev libcurl4-openssl-dev python3-dev python3-pip doxygen graphviz `
 	
 - Installed additional dependencies as errors appeared during CMake
@@ -54,21 +56,32 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 - However, KiCad 6.0 source branch lacks the ‘get_libngspice_so.sh’
 - Manually cloned and built ngspice with shared library support:
 >   ` git clone https://git.code.sf.net/p/ngspice/ngspice `
+> 
 >	` cd ngspice `
+> 
 >	` ./autogen.sh `
+> 
 >	` ./configure --with-ngshared `
+> 
 >	` make -j$(nproc) `
+> 
 >	` sudo make install `
 
 #### (3.1) Building and Installing OpenCascade Technology (OCCT)
 - OpenCascade packages were unavailable in Ubuntu 25.04 repositories
 - Cloned the official OCCT repository and built from source:
 >	` git clone https://git.dev.opencascade.org/gitweb?p=occt.git `
+>
 >	` cd occt `
+>
 >	` mkdir build && cd build `
+>
 >	` cmake .. `
+>
 >	` make -j$(nproc) `
+>
 >	` sudo make install `
+>
 >	` sudo ldconfig `
 - Installed Tcl/Tk development headers to satisft OCCT build requirements:
 > ` 	sudo apt install tcl-dev tk-dev `
@@ -77,12 +90,19 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 - Modern OCCT (8.0) renamed libraries, breaking KiCad’s legacy library name expectations
 - Symlinked OCCT libraries to legacy names expected by KiCad, for example:
 >	` cd /usr/local/lib `
+>
 >	` sudo ln -s libTKDEIGES.so libTKIGES.so `
+>
 >	` sudo ln -s libTKDESTEP.so libTKSTEP209.so `
+>
 >	` sudo ln -s libTKDESTEP.so libTKSTEPAttr.so `
+>
 >	` sudo ln -s libTKDESTL.so libTKSTL.so `
+>
 >	` sudo ln -s libTKDEVRML.so libTKVRML.so `
+>
 >	` sudo ln -s libTKDESTEP.so libTKSTEPBase.so `
+>
 >	` sudo ldconfig `
 
 - Created similar symlinks for all other reported missing OCCT libraries during KiCad’s CMake config
@@ -91,13 +111,16 @@ Now, the installer can proceed, allowing further debugging based on dependencies
 - Encountered errors where Python headers and library are not found in CMake
 Python Code:
 	> ` python3 -c "from sysconfig import get_paths; print(get_paths()['include'])" `
+ > 
 	> ` ldconfig -p | grep libpython3 `
 - Run CMake with explicit Python paths
 
 #### (5) Building and Installation KiCad
 - Compiled KiCad:
 >	` make -j$(nproc) `
+>
 > 	` sudo make install `
+>
 >	` sudo ldconfig `
 - Verified installation by running KiCad in the terminal
 
@@ -139,6 +162,7 @@ Now the installer can proceed, allowing further debugging based on dependencies
 - Edited the ‘install-nghdl-25.-04.sh’ file that was created and removed ‘libcanberra-gtk-module’ from the following line:
 	
  > ` 	echo "Installing Gtk Canberra modules..........................."  `
+> 
  > `  	sudo apt install -y libcanterra-gtk-module libcanberra-gtk3-module `
 
 ## Bug #5: GHDL Build Fails with “Unhandled version llvm 20.1.2”
